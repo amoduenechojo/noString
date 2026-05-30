@@ -6,7 +6,7 @@ import africa.semicolon.noStrings.dtos.RegisterSeekerResponse;
 
 public class SeekerMapper {
 
-    public Seeker toEntity(RegisterSeekerRequest request){
+    public static Seeker toEntity(RegisterSeekerRequest request){
         if (request == null){
             return null;
         }
@@ -22,13 +22,13 @@ public class SeekerMapper {
     }
 
 
-    public RegisterSeekerResponse toRegisterResponse(Seeker savedSeeker){
+    public static RegisterSeekerResponse toRegisterResponse(Seeker savedSeeker){
         if (savedSeeker == null){
             return null;
         }
 
         RegisterSeekerResponse response = new RegisterSeekerResponse();
-        response.setId(String.valueOf(savedSeeker.getId()));
+        response.setId(savedSeeker.getId());
         response.setMessage("Seeker registered successfully.");
         response.setSuccessful(true);
 

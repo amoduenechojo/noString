@@ -5,6 +5,7 @@ import africa.semicolon.noStrings.data.repositories.SeekerRepository;
 import africa.semicolon.noStrings.dtos.RegisterSeekerRequest;
 import africa.semicolon.noStrings.dtos.RegisterSeekerResponse;
 import africa.semicolon.noStrings.exceptions.customException.*;
+import africa.semicolon.noStrings.mapper.SeekerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,6 +86,14 @@ public class SeekerServiceImpl implements SeekerService {
             if (!hasDigit) {
                 throw new ValidationException("Password must contain at least one number.");
             }
+
+//
+//            Seeker seeker = new SeekerMapper().toEntity(request);
+//
+//            Seeker savedSeeker = seekerRepository.save(seeker);
+//
+//            return new SeekerMapper().toRegisterResponse(savedSeeker);
+
             return null;
         }
 
