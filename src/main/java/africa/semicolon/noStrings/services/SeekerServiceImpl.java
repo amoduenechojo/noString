@@ -8,6 +8,7 @@ import africa.semicolon.noStrings.exceptions.customException.*;
 import africa.semicolon.noStrings.mapper.SeekerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.regex.Pattern;
 
@@ -20,13 +21,12 @@ public class SeekerServiceImpl implements SeekerService {
         @Override
         public RegisterSeekerResponse register(RegisterSeekerRequest request) {
 
-            String password = request.getPassword();
-            boolean hasUppercase = false;
-            boolean hasDigit = false;
-
+            if (request == null){
+                throw new EmptyRequestFormFound("Request form cannot be empty");
+            }
 
             if (usernameExists(request.getUsername())) {
-                throw new IllegalArgumentException("Username already exists");
+                throw new DuplicateUsernameFound("Username already exists");
             }
 
             if (emailExists(request.getEmail())) {
@@ -37,64 +37,32 @@ public class SeekerServiceImpl implements SeekerService {
                 throw new DuplicatePhoneNumberFound("Phone number already exists");
             }
 
-            if (request == null){
-                throw new EmptyRequestFormFound("Request form cannot be empty");
+            if (request.getUsername() == null || request.getUsername().isEmpty()) {
+                throw new EmptyRequestFormFound("Username cannot be empty");
+            }
+
+            if (request.getEmail() == null || request.getEmail().isEmpty()) {
+                throw new EmptyRequestFormFound("Email cannot be empty");
             }
 
 
-            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
-                throw new IllegalArgumentException("Username cannot be empty");
-            }
-
-            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-                throw new IllegalArgumentException("Email cannot be empty");
-            }
-
-
-            if(request.getPassword() == null || request.getPassword().trim().isEmpty()){
-                throw new IllegalArgumentException("Password cannot be empty");
+            if(request.getPassword() == null || request.getPassword().isEmpty()){
+                throw new EmptyRequestFormFound("Password cannot be empty");
             }
 
 
             if(request.getGender() == null){
-                throw new IllegalArgumentException("Gender must be specified");
+                throw new EmptyRequestFormFound("Gender must be specified");
             }
 
-            if(password == null){
-                throw new IllegalArgumentException("Password must be specified");
-            }
+            validateGmailFormat(request.getEmail());
+            validatePassword(request.getPassword());
 
-            if (password.length() < 6) {
-                throw new WeakPasswordException("Password is too short! Must be at least 6 characters.");
-            }
+            Seeker seeker = SeekerMapper.toEntity(request);
+            seekerRepository.save(seeker);
 
-            for (int index = 0; index < password.length(); index++) {
-                char character = password.charAt(index); 
+            return SeekerMapper.toRegisterResponse(seeker);
 
-                if (Character.isUpperCase(character)) {
-                    hasUppercase = true;
-                } 
-                
-                else if (Character.isDigit(character)) {
-                    hasDigit = true;
-                }
-            }
-
-            if (!hasUppercase) {
-                throw new ValidationException("Password must contain at least one uppercase letter.");
-            }
-            if (!hasDigit) {
-                throw new ValidationException("Password must contain at least one number.");
-            }
-
-//
-//            Seeker seeker = new SeekerMapper().toEntity(request);
-//
-//            Seeker savedSeeker = seekerRepository.save(seeker);
-//
-//            return new SeekerMapper().toRegisterResponse(savedSeeker);
-
-            return null;
         }
 
 
@@ -107,6 +75,7 @@ public class SeekerServiceImpl implements SeekerService {
             return false;
         }
 
+
         private boolean emailExists(String email) {
             if (email == null) return false;
             for (Seeker seeker : seekerRepository.findAll()) {
@@ -117,8 +86,10 @@ public class SeekerServiceImpl implements SeekerService {
             return false;
         }
 
+
         private boolean phoneNumberExists(String phoneNumber) {
             if (phoneNumber == null) return false;
+
             for (Seeker seeker : seekerRepository.findAll()) {
                 if (seeker.getPhoneNumber() != null && seeker.getPhoneNumber().equals(phoneNumber)) {
                     return true;
@@ -127,15 +98,52 @@ public class SeekerServiceImpl implements SeekerService {
             return false;
         }
 
+
         public void validateGmailFormat(String email){
-            String gmailFormat = "^(?=.{6,30}@gmail\\.com$)[a-zA-Z0-9.]+@gmail.com$";
 
           if(email == null){
               throw new EmptyRequestFormFound("Email cannot be empty");
           }
 
-          if(!Pattern.matches(gmailFormat,  email)){
+            String gmailFormat = "^(?=.{6,30}@gmail\\.com$)[a-zA-Z0-9.]+@gmail.com$";
+
+            if(!Pattern.matches(gmailFormat, email)){
               throw new InvalidEmailException("Invalid email address, username should be between 6-30 characters.");
           }
+        }
+
+        public void validatePassword(String password) {
+            if (password == null) {
+                throw new EmptyRequestFormFound("Password cannot be empty");
+
+            }
+
+            if (password.length() < 6) {
+                throw new WeakPasswordException("Password is too short! Must be at least 6 characters.");
+            }
+
+            boolean hasUppercase = false;
+            boolean hasDigit = false;
+
+
+
+
+            for (int index = 0; index < password.length(); index++) {
+                char character = password.charAt(index);
+
+                if (Character.isUpperCase(character)) {
+                    hasUppercase = true;
+                } else if (Character.isDigit(character)) {
+                    hasDigit = true;
+                }
+            }
+
+            if (!hasUppercase) {
+                throw new ValidationException("Password must contain at least one uppercase letter.");
+            }
+
+            if (!hasDigit) {
+                throw new ValidationException("Password must contain at least one number.");
+            }
         }
     }

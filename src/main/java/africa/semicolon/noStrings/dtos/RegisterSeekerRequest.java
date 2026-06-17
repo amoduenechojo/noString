@@ -1,7 +1,9 @@
 package africa.semicolon.noStrings.dtos;
 
 import africa.semicolon.noStrings.data.models.Gender;
-import lombok.*;
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
