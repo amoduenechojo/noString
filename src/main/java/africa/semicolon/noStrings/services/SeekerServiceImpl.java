@@ -101,16 +101,19 @@ public class SeekerServiceImpl implements SeekerService {
 
         public void validateGmailFormat(String email){
 
-          if(email == null){
+            String gmailFormat = "^(?=.{6,30}@gmail\\.com$)[a-zA-Z0-9.]+@gmail.com$";
+
+            if(email == null){
               throw new EmptyRequestFormFound("Email cannot be empty");
           }
 
-            String gmailFormat = "^(?=.{6,30}@gmail\\.com$)[a-zA-Z0-9.]+@gmail.com$";
+//            String gmailFormat = "^(?=.{6,30}@gmail\\.com$)[a-zA-Z0-9.]+@gmail.com$";
 
             if(!Pattern.matches(gmailFormat, email)){
-              throw new InvalidEmailException("Invalid email address, username should be between 6-30 characters.");
+              throw new InvalidEmailException("Invalid email address.");
           }
         }
+
 
         public void validatePassword(String password) {
             if (password == null) {
@@ -124,8 +127,6 @@ public class SeekerServiceImpl implements SeekerService {
 
             boolean hasUppercase = false;
             boolean hasDigit = false;
-
-
 
 
             for (int index = 0; index < password.length(); index++) {

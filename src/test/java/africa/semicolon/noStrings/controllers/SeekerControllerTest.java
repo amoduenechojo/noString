@@ -48,34 +48,34 @@ public class SeekerControllerTest {
                 .andExpect(jsonPath("$.successful").value(true));
     }
 
-    @Test
-    public void testThatDuplicateUsername_gives400() throws Exception {
-        String userInformation = """
-        {
-            "username" : "Deborah",
-            "password":"Zassword1",
-            "email":"jakarata@gmail.com",
-            "phoneNumber": "08020438903",
-            "gender":"MALE"
-        }
-        """;
-
-
-        mockMvc.perform(
-                        post("/api/seekers/register")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(userInformation))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.successful").value(true));
-
-
-        mockMvc.perform(
-                        post("/api/seekers/register")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(userInformation))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.successful").value(false));
-    }
+//    @Test
+//    public void testThatDuplicateUsername_gives400() throws Exception {
+//        String userInformation = """
+//        {
+//            "username" : "Deborah",
+//            "password":"Zassword1",
+//            "email":"jakarata@gmail.com",
+//            "phoneNumber": "08020438903",
+//            "gender":"MALE"
+//        }
+//        """;
+//
+//
+//        mockMvc.perform(
+//                        post("/api/seekers/register")
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .content(userInformation))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.successful").value(true));
+//
+//
+//        mockMvc.perform(
+//                        post("/api/seekers/register")
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .content(userInformation))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(jsonPath("$.successful").value(false));
+//    }
 
     @Test
     public void testThatDuplicateEmail_gives400() throws Exception {

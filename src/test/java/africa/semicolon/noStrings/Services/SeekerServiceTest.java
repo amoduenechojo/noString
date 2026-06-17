@@ -38,7 +38,7 @@ public class SeekerServiceTest {
 
     @Test
     public void testThatUserCanRegisterSuccessfully() {
-        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", "StrongP@ssword1", "chojo@backend.com", "08123456789", Gender.FEMALE);
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo", "StrongP@ssword1", "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
 
         RegisterSeekerResponse response = seekerService.register(request);
 
@@ -52,9 +52,9 @@ public class SeekerServiceTest {
     public void testThatValidSeekerCanBeSaved() {
 
         Seeker seeker = new Seeker();
-        seeker.setUsername("chojo");
-        seeker.setEmail("chojo@backend.com");
-        seeker.setPassword("password123");
+        seeker.setUsername("Enechojo");
+        seeker.setEmail("amoduchojo27@gmail.com");
+        seeker.setPassword("StrongP@ssword1");
 
 
         Seeker savedSeeker = seekerRepository.save(seeker);
@@ -63,43 +63,44 @@ public class SeekerServiceTest {
         assertNotNull(savedSeeker);
         assertNotNull(savedSeeker.getId());
 
-        assertEquals("chojo", savedSeeker.getUsername());
+        assertEquals("Enechojo", savedSeeker.getUsername());
         assertEquals(1, seekerRepository.count());
     }
-//
-//    @Test
-//    public void testThatExistingEmailsAlreadyRegistered_duplicateEmailsNotAllowed_exceptionIsThrown() {
-//
-//        RegisterSeekerRequest firstRequest = new RegisterSeekerRequest("Chojo", "StrongP@ssword1", "chojo@backend.com","08123456789",  Gender.FEMALE);
-//        seekerService.register(firstRequest);
-//
-//        RegisterSeekerRequest request = new RegisterSeekerRequest("Victor", "StrongP@ssword1", "chojo@backend.com", "08125630570", Gender.FEMALE) ;
-//
-//        assertThrows(DuplicateEmailFound.class, () -> seekerService.register(request));
-//    }
-//
-//
-//
-//    @Test
-//    public void testThatExistingUsernameAlreadyRegistered_duplicateUsernameIsNotAllowed_exceptionIsThrown() {
-//
-//        RegisterSeekerRequest firstRequest = new RegisterSeekerRequest("Chojo","StrongP@ssword1" , "chojo@backend.com", "08123456789", Gender.FEMALE);
-//        seekerService.register(firstRequest);
-//
-//        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo","P@ssword456" , "eamodu92@gmail.com", "08155555555", Gender.FEMALE);
-//
-//        assertThrows(DuplicateUsernameFound.class, () -> seekerService.register(request));
-//
-//    }
+
+
+    @Test
+    public void testThatExistingEmailsAlreadyRegistered_duplicateEmailsNotAllowed_exceptionIsThrown() {
+
+        RegisterSeekerRequest firstRequest = new RegisterSeekerRequest("Enechojo", "StrongP@ssword1", "amoduchojo27@gmail.com","08123456789",  Gender.FEMALE);
+        seekerService.register(firstRequest);
+
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Chairman", "CupidsP@ssword1", "amoduchojo27@gmail.com", "08125630570", Gender.MALE) ;
+
+        assertThrows(DuplicateEmailFound.class, () -> seekerService.register(request));
+    }
+
+
+
+    @Test
+    public void testThatExistingUsernameAlreadyRegistered_duplicateUsernameIsNotAllowed_exceptionIsThrown() {
+
+        RegisterSeekerRequest firstRequest = new RegisterSeekerRequest("Enechojo","StrongP@ssword1" , "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
+        seekerService.register(firstRequest);
+
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo","P@ssword456" , "eleojoamodu92@gmail.com", "08155555555", Gender.MALE);
+
+        assertThrows(DuplicateUsernameFound.class, () -> seekerService.register(request));
+
+    }
 
 
     @Test
     public void testThatExistingPhoneNumberAlreadyRegistered_duplicatePhoneNumberIsNotAllowed_exceptionIsThrown() {
 
-        RegisterSeekerRequest firstRequest = new RegisterSeekerRequest("Chojo", "StrongP@ssword1", "chojo@gmail.com", "08123456789", Gender.FEMALE);
+        RegisterSeekerRequest firstRequest = new RegisterSeekerRequest("Enechojo", "StrongP@ssword1", "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
         seekerService.register(firstRequest);
 
-        RegisterSeekerRequest request = new RegisterSeekerRequest("Afor", "StrongP@ssword2", "amodumartha7@gmail.com", "08123456789", Gender.FEMALE);
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enyojo", "StrongP@ssword2", "amodumartha7@gmail.com", "08123456789", Gender.FEMALE);
 
         assertThrows(DuplicatePhoneNumberFound.class, () -> seekerService.register(request));
 
@@ -143,14 +144,14 @@ public class SeekerServiceTest {
     }
 
 
-//    @Test
-//    public void testThatRegistrationFailsWhenGenderIsNotSelected(){
-//
-//        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", "chojo@backend.com", "password123", "08123456789", null);
-//
-//        assertThrows(IllegalArgumentException.class, () -> seekerService.register(request));
-//
-//    }
+    @Test
+    public void testThatRegistrationFailsWhenGenderIsNotSelected(){
+
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", "chojo@backend.com", "password123", "08123456789", null);
+
+        assertThrows(EmptyRequestFormFound.class, () -> seekerService.register(request));
+
+    }
 
     @Test
     public void testRegistration_WhenEmailIsLessThanSixCharacters_ThrowsInvalidEmailException(){
@@ -187,7 +188,7 @@ public class SeekerServiceTest {
 
         assertThrows(InvalidEmailException.class, () -> seekerService.register(request));
     }
-
+//
 //    @Test
 //    public void testRegistration_WhenEmailIsBlankWithSpaces_ThrowsEmptyRequestFormFoundException() {
 //        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", "StrongP@ssword1", "   ", "08123456789", Gender.FEMALE);
@@ -195,34 +196,47 @@ public class SeekerServiceTest {
 //        assertThrows(EmptyRequestFormFound.class, () -> seekerService.register(request));
 //    }
 
-//    @ParameterizedTest
-//    @ValueSource(strings = {"nouppercase123", "NoNumberHere", "no_digits_or_caps"})
-//
-//    public void testThatPasswordsMissingRequiredCharactersThrowValidationException(String invalidPassword){
-//
-//        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", invalidPassword, "chojo@backend.com", "08123456789", Gender.FEMALE);
-//
-//        assertThrows(ValidationException.class, ()->seekerService.register(request));
-//
-//    }
 
-//    @ParameterizedTest
-//    @ValueSource(strings = {"123", "short", "aB1"})
-//    public void testThatPasswordsBelowMinimumLengthThrowWeakPasswordException(String shortPassword) {
-//        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", "shortPassword", "chojo@gmail.com", "08123456789", Gender.FEMALE);
-//
-//        assertThrows(WeakPasswordException.class, () -> {
-//            seekerService.register(request);
-//        });
-//    }
+    @Test
+    public void testThat_WhenThereIsNoUppercaseIn_aPassword_ExceptionIsThrown(){
 
-//    @Test
-//    public void testThatStrongPasswordRegistrationSucceeds() {
-//        RegisterSeekerRequest request = new RegisterSeekerRequest("Chojo", "StrongP@ssword1", "chojo@gmail.com", "08123456789", Gender.FEMALE
-//        );
-//
-//        RegisterSeekerResponse response = seekerService.register(request);
-//        assertNotNull(response);
-//        assertTrue(response.isSuccessful());
-//    }
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo", "nouppercase123", "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
+
+        assertThrows(ValidationException.class, ()->seekerService.register(request));
+
+    }
+
+    @Test
+    public void testThat_WhenThereIsNoNumberInPassword_ExceptionIsThrown(){
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo", "NoNumberHere", "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
+
+        assertThrows(ValidationException.class, ()->seekerService.register(request));
+
+    }
+
+    @Test
+    public void testThatWhenPassword_doesNotContain_digitOrCaplock_exceptionIsThrown(){
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo", "no_digits_or_caps", "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
+
+        assertThrows(ValidationException.class, ()->seekerService.register(request));
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"123", "short", "aB1"})
+    public void testThatPasswordsBelowMinimumLengthThrowWeakPasswordException(String shortPassword) {
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo", shortPassword, "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE);
+
+        assertThrows(WeakPasswordException.class, () -> seekerService.register(request));
+    }
+
+    @Test
+    public void testThatStrongPasswordRegistrationSucceeds() {
+        RegisterSeekerRequest request = new RegisterSeekerRequest("Enechojo", "StrongP@ssword1", "amoduchojo27@gmail.com", "08123456789", Gender.FEMALE
+        );
+
+        RegisterSeekerResponse response = seekerService.register(request);
+        assertNotNull(response);
+        assertTrue(response.isSuccessful());
+    }
 }
